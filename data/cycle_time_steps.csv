@@ -1,0 +1,9 @@
+step_id,action_description,duration_sec,type,cognitive_load
+1,Pick up part from chariot,15,Manual,Medium
+2,Close pistons (Locking),5,Automation,Low
+3,Lift part (Vertical move),12,Automation,Low
+4,Move toward fixture (Lateral),20,Manual,Medium
+5,Fine adjustment (Alignment),15,Manual,High
+6,Tilt 30 degrees,8,Automation,Low
+7,Open pistons (Release),5,Automation,Low
+8,Fixture confirmation,5,Manual,Low
