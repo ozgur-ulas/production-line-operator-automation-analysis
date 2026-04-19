@@ -1,17 +1,33 @@
-# Operator Interface & Workflow Logic ♟️
+import numpy as np
 
-### The "Minimalist" Constraint
-To ensure the 63 vh/h target, we eliminated all complex HMI (Human Machine Interface) elements. The operator only interacts with:
-1. **Fixed Handle:** For movement authorization.
-2. **Vertical/Lateral Joysticks:** No screens, just tactile feedback.
+def validate_station_efficiency(steps, sigma_factor=0.10):
+    """
+    Validates if the 1-operator setup stays under the 240s limit
+    including a 10% human variance (sigma).
+    """
+    base_time = sum(steps.values())
+    variance = base_time * sigma_factor
+    total_expected = base_time + variance
+    
+    limit = 240 # Renault Station Limit
+    is_valid = total_expected < limit
+    
+    return {
+        "Base Cycle Time": f"{base_time}s",
+        "Variance (Sigma)": f"{variance}s",
+        "Total Projected": f"{total_expected}s",
+        "Takt Compliance": "✅ PASS" if is_valid else "❌ FAIL"
+    }
 
-### 🔄 The 30° Tilt Logic
-The 30-degree tilt was identified as the critical ergonomics factor. 
-* **Constraint:** Manual tilting of a Clio 5 bodyside causes long-term strain.
-* **Solution:** Automated tilt triggered only when the arm reaches the fixture proximity sensors.
-* **Result:** Reduced cognitive load from "High" to "Low" during the most dangerous phase of the transfer.
+# Example data from the Clio 5 line
+clio_steps = {
+    "pick_up": 15,
+    "piston_lock": 5,
+    "lift": 12,
+    "transfer": 20,
+    "alignment": 15,
+    "tilt_30": 8,
+    "piston_release": 5
+}
 
-### 📐 Mathematical Validation
-The total cycle time $T_{total}$ is calculated as:
-$$T_{total} = \sum (t_{manual} + t_{automation}) + \sigma$$
-*Where $\sigma$ represents the variance in operator speed.*
+print(validate_station_efficiency(clio_steps))
